@@ -69,7 +69,7 @@ static const int elevation_data[N_ELEV] = {56, 60, 72, 72, 72, 72, 72,
 
 static int hrtferxkSet(CSOUND *csound, HRTFER *p)
 {
-    /* int    i; /* standard loop counter */
+    /* int    i; // standard loop counter */
     char   filename[MAXNAME];
     int    bytrev_test;
     MEMFIL *mfp;
