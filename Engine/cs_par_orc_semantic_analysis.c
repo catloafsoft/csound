@@ -282,7 +282,7 @@ void csp_orc_sa_instr_add(CSOUND *csound, char *name)
     }
     else if (csound->instCurr == NULL) {
       INSTR_SEMANTICS *prev = csound->instRoot;
-      printf("instCurr NULL\n");
+      //printf("instCurr NULL\n");
       csound->instCurr = prev->next;
       while (csound->instCurr != NULL) {
         prev = csound->instCurr;
@@ -292,7 +292,7 @@ void csp_orc_sa_instr_add(CSOUND *csound, char *name)
       csound->instCurr = prev->next;
     }
     else {
-      printf("othercase\n");
+      //printf("othercase\n");
       csound->instCurr->next = instr_semantics_alloc(csound, name);
       csound->instCurr = csound->instCurr->next;
     }
