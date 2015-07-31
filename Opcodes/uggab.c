@@ -237,7 +237,8 @@ static int posc_set(CSOUND *csound, POSC *p)
     p->ftp        = ftp;
     p->tablen     = ftp->flen;
     p->tablenUPsr = p->tablen * csound->onedsr;
-    p->phs        = *p->iphs * p->tablen;
+    if (*p->iphs>=FL(0.0))
+      p->phs        = *p->iphs * p->tablen;
     return OK;
 }
 
@@ -1288,8 +1289,10 @@ static int vibrato_set(CSOUND *csound, VIBRATO *p)
 
     if ((ftp = csound->FTnp2Find(csound, p->ifn)) != NULL) {
       p->ftp = ftp;
-      if (*p->iphs >= 0)
+      if (*p->iphs >= 0 && *p->iphs<1.0)
         p->lphs = ((int32)(*p->iphs * FMAXLEN)) & PHMASK;
+      else if (*p->iphs>=1.0)
+        return csound->InitError(csound, Str("vibrato@ Phase out of range"));
     }
     else return NOTOK;
     p->xcpsAmpRate = randGab *(*p->cpsMaxRate - *p->cpsMinRate) +

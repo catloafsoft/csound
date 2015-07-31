@@ -1141,7 +1141,7 @@ static int gen18(FGDATA *ff, FUNC *ftp)
       finish=(int)*pp++;
       if (UNLIKELY(nsw && pp>=&ff->e.p[PMAX-1])) nsw =0, pp = &(ff->e.c.extra[1]);
 
-      if (UNLIKELY((start>ff->flen) || (finish>ff->flen))) {
+      if (UNLIKELY((start>ff->flen) || (finish>=ff->flen))) {
         /* make sure start and finish < flen */
         return fterror(ff, Str("a range given exceeds table length"));
       }
@@ -1316,8 +1316,9 @@ static MYFLT nextval(FILE *f)
     /* Read the next charcater; suppress multiple space and comments to a
        single space */
     int c;
-    c = getc(f);
  top:
+    c = getc(f);
+ top1:
     if (feof(f)) return NAN; /* Hope value is ignored */
     if (isdigit(c) || c=='e' || c=='E' || c=='+' || c=='-' || c=='.') {
       double d;                           /* A number starts */
@@ -1334,10 +1335,11 @@ static MYFLT nextval(FILE *f)
       }
       return (MYFLT)d;
     }
-    while (isspace(c)) c = getc(f);       /* Whitespace */
+    while (isspace(c) || c == ',') c = getc(f);       /* Whitespace */
     if (c==';' || c=='#' || c=='<') {     /* Comment and tag*/
       while ((c = getc(f)) != '\n');
     }
+    if (isdigit(c) || c=='e' || c=='E' || c=='+' || c=='-' || c=='.') goto top1;
     goto top;
 }
 
